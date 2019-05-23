@@ -1,0 +1,8 @@
+registry.cn-shenzhen.aliyuncs.com/jbjb/jbjb-centos:OS7-tomcat8.5.41-v01
+
+
+tomcat8.5.41镜像基于centos7.6
+
+ docker push registry.cn-shenzhen.aliyuncs.com/jbjb/jbjb-centos:OS7-tomcat8.5.41-v01
+ 
+ 
