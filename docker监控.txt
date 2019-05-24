@@ -1,0 +1,21 @@
+curl -L git.io/scope -o /usr/local/bin/scope
+cd /usr/local/bin/
+chmod +x scope 
+
+./scope launch 172.16.8.194
+
+
+scope  stop
+
+
+启动jar包
+ENTRYPOINT ["java","-jar","dog-0.0.1-SNAPSHOT.jar"]
+
+
+cat >/tmp/123.sh<<EOF
+#!/bin/bash
+
+dir='/java/service/dog-0.0.1-SNAPSHOT.jar'
+java -Xms512m -Xmx512m -Xss256k -XX:PermSize=64m -XX:MaxPermSize=500m -jar $dir >/dev/null 2>/tmp/22.txt &
+
+exit
