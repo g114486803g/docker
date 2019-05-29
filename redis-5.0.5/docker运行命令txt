@@ -1,0 +1,7 @@
+启动容器
+docker run -i -d --name 123qwe -p 6888:6379 --rm a/redis:v5.0.5 /bin/bash
+
+在运行redis
+docker exec -it 123qwe  redis-server /usr/local/redis/redis.conf
+
+redis密码123000
