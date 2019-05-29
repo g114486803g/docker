@@ -1,3 +1,6 @@
+镜像拉取
+docker push  registry.cn-shenzhen.aliyuncs.com/jbjb/jbjb-centos:redisv5.0.5
+
 启动容器
 docker run -i -d --name 123qwe -p 6888:6379 --rm a/redis:v5.0.5 /bin/bash
 
