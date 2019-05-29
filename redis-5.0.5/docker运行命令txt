@@ -1,3 +1,5 @@
+说明镜像基于alpine3.9.4
+
 镜像拉取
 docker pull  registry.cn-shenzhen.aliyuncs.com/jbjb/jbjb-centos:redisv5.0.5
 
