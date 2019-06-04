@@ -1,0 +1,41 @@
+cat >Dockerfile<<EOF
+
+FROM falpine/tomcat85:v01
+ADD target/fish.war /data/service
+EOF
+
+docker build -t fish/war:v01 .
+'''    
+
+
+######流水线脚本
+
+node {
+def mvnHome
+
+stage('拉取代码') { 
+
+git credentialsId: '26010ff7-6275-4727-8f41-f27792a634ef', url: 'http://172.16.8.61:8085/root/fish-demo.git'
+}
+
+
+stage('正在编译请稍等变成绿色') {
+     
+         sh "'${M2_HOME}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+}
+
+
+stage('dockerfile制作') {
+sh '''
+cat >Dockerfile<<EOF
+
+FROM alpine/tomcat85:v01
+ADD target/fish.war /data/service
+EOF
+
+#请记得改镜像名
+docker build -t fish/xxx:v01 .
+'''    
+
+    }
+}
