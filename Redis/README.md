@@ -1,5 +1,8 @@
+一. 获取一个docker基础镜像
+docker pull registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine-v02
 
------------编译docker容器------------
+
+二 .-----------编译docker容器------------
 docker build -t redis/alpine:v5.0.5 .
 
 --------------------------------
