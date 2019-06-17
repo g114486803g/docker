@@ -1,8 +1,10 @@
 一. 获取一个docker基础镜像
 docker pull registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine-v02
 
+二.改名
+docker tag registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine-v02 alpine:v02 
 
-二 .-----------编译docker容器------------
+三 .-----------编译docker容器------------
 docker build -t redis/alpine:v5.0.5 .
 
 --------------------------------
