@@ -26,6 +26,11 @@ OK
 
 EOF
 
-
+n1=`docker inspect --format='{{.NetworkSettings.IPAddress}}' node1`
+m1=`docker inspect --format='{{.NetworkSettings.IPAddress}}' master-redis`
+echo "###########################"
+echo "master-redis: $m1"
+echo "node1 ip: $n1"
+echo "###########################"
 rm -rf /tmp/all-redis.sh
 
