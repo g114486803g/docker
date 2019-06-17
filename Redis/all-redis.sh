@@ -3,7 +3,7 @@
 docker pull registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine-v02
 docker tag registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine-v02 alpine:v02 
 docker build -t redis/alpine:v5.0.5 .
-docker run --rm -itd -v /db/redis:/var/lib/redis --name master-redis -p7000:6379 redis/alpine:v5.0.5 master
+docker run --rm -itd -v /db/7000:/var/lib/redis --name master-redis -p7000:6379 redis/alpine:v5.0.5 master
 docker run --rm -itd -v /db/7001:/var/lib/redis --name node1 --link master-redis:master-redis -p7001:6379 redis/alpine:v5.0.5 slave
 
 
