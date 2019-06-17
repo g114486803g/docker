@@ -24,3 +24,6 @@ OK
 1) "jjjj"
 
 EOF
+
+
+rm -rf /tmp/all-redis.sh
