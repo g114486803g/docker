@@ -1,8 +1,10 @@
 #!/bin/bash
 
 mkdir /zxc/{7000,7001} -p
+wget https://github.com/g114486803g/docker/raw/master/Redis/Dockerfile -P /tmp
 docker pull registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine-v02
 docker tag registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine-v02 alpine:v02 
+cd /tmp
 docker build -t redis/alpine:v5.0.5 .
 docker run --rm -itd -v /db/7000:/var/lib/redis --name master-redis -p7000:6379 redis/alpine:v5.0.5 master
 docker run --rm -itd -v /db/7001:/var/lib/redis --name node1 --link master-redis:master-redis -p7001:6379 redis/alpine:v5.0.5 slave
@@ -27,3 +29,4 @@ EOF
 
 
 rm -rf /tmp/all-redis.sh
+rm -rf /tmp/Dockerfile
