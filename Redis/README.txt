@@ -47,6 +47,8 @@ slave_read_only:1
 
 docker run --rm -itd -v /db/redis:/var/lib/redis --name master-redis -p6379:6379 --requirepass "mypassword" --appendonly yes redis/alpine:v5.0.5 master
 
-
+==========================
+可以选择一建部署
+ wget https://github.com/g114486803g/docker/raw/master/Redis/all-redis.sh -P /tmp && sh /tmp/all-redis.sh
 
 
