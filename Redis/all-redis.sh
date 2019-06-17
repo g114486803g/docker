@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir /zxc/{7000,7001} -p
 docker pull registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine-v02
 docker tag registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine-v02 alpine:v02 
 docker build -t redis/alpine:v5.0.5 .
