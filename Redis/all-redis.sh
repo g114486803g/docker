@@ -3,8 +3,8 @@
 mkdir /zxc/{7000,7001} -p
 docker pull registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:redis-v5
 docker tag registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:redis-v5 redis/alpine:v5.0.5 
-docker run --rm -itd -v /db/7000:/var/lib/redis --name master-redis -p7000:6379 redis/alpine:v5.0.5 master
-docker run --rm -itd -v /db/7001:/var/lib/redis --name node1 --link master-redis:master-redis -p7001:6379 redis/alpine:v5.0.5 slave
+docker run --rm -itd -v /zxc/7000:/var/lib/redis --name master-redis -p7000:6379 redis/alpine:v5.0.5 master
+docker run --rm -itd -v /zxc/7001:/var/lib/redis --name node1 --link master-redis:master-redis -p7001:6379 redis/alpine:v5.0.5 slave
 
 echo "#############################"
 echo "主从密码12300"
