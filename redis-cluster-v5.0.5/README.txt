@@ -8,3 +8,6 @@ wget https://github.com/g114486803g/docker/raw/master/redis-cluster-v5.0.5/clust
  
  删除redis镜像
  docker rmi redis/cluster:v01 
+
+删除持久化目录
+rm -rf /rdb/
