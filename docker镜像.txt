@@ -5,4 +5,6 @@ tomcat8.5.41镜像基于centos7.6
 
  docker push registry.cn-shenzhen.aliyuncs.com/jbjb/jbjb-centos:OS7-tomcat8.5.41-v01
  
- 
+
+导入镜像
+cat alibaba-rocketmq-3.2.6.tar | docker import - abbc:v02或者 docker load -i  alibaba-rocketmq-3.2.6.tar
