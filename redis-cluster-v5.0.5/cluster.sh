@@ -29,3 +29,5 @@ docker exec -it redis7700 redis-cli  --cluster create  $no1:6379 $no2:6379 $no3:
 #echo docker exec -it redis7000 redis-cli  --cluster create  $no1:7000 $no2:7001 $no3:7002 $no4:7003 $no5:7004 $no6:7005 --cluster-replicas 1
 echo `date`
 echo "##########################"
+
+docker ps -a | awk '{print $11}'
