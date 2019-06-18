@@ -7,20 +7,20 @@ docker tag registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:rdis-cluster-v5.0.5 red
 
 docker rmi registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:rdis-cluster-v5.0.5
 
-mkdir -p /rdb/{7000,7001,7002,7003,7004,7005} 
-docker run --rm --name redis7000 -v /rdb/7000:/var/lib/redis -p 7000:6379 -d redis/cluster:v01
-docker run --rm --name redis7001 -v /rdb/7001:/var/lib/redis -p 7001:6379 -d redis/cluster:v01
-docker run --rm --name redis7002 -v /rdb/7002:/var/lib/redis -p 7002:6379 -d redis/cluster:v01
-docker run --rm --name redis7003 -v /rdb/7003:/var/lib/redis -p 7003:6379 -d redis/cluster:v01
-docker run --rm --name redis7004 -v /rdb/7004:/var/lib/redis -p 7004:6379 -d redis/cluster:v01
-docker run --rm --name redis7005 -v /rdb/7005:/var/lib/redis -p 7005:6379 -d redis/cluster:v01
+mkdir -p /rdb/{7700,7701,7702,7703,7704,7705} 
+docker run --rm --name redis7700 -v /rdb/7700:/var/lib/redis -p 7700:6379 -d redis/cluster:v01
+docker run --rm --name redis7701 -v /rdb/7701:/var/lib/redis -p 7701:6379 -d redis/cluster:v01
+docker run --rm --name redis7702 -v /rdb/7702:/var/lib/redis -p 7702:6379 -d redis/cluster:v01
+docker run --rm --name redis7703 -v /rdb/7703:/var/lib/redis -p 7703:6379 -d redis/cluster:v01
+docker run --rm --name redis7704 -v /rdb/7704:/var/lib/redis -p 7704:6379 -d redis/cluster:v01
+docker run --rm --name redis7705 -v /rdb/7705:/var/lib/redis -p 7705:6379 -d redis/cluster:v01
 
-no1=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7000`
-no2=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7001`
-no3=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7002`
-no4=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7003`
-no5=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7004`
-no6=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7005`
+no1=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7700`
+no2=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7701`
+no3=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7702`
+no4=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7703`
+no5=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7704`
+no6=`docker inspect --format='{{.NetworkSettings.IPAddress}}' redis7705`
 
 
 echo "初始化集群"
