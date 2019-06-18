@@ -1,0 +1,12 @@
+
+官网查看一个
+https://hub.docker.com/_/rabbitmq?tab=tags
+
+
+docker pull  rabbitmq:3.7.15-management-alpine
+
+启动说明
+docker run --rm -d --name Myrabbitmq -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin123 -p 15672:15672 -p 5673:5672 -p 4369:4369 rabbitmq:3.7.15-management-alpine
+
+
+-e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin123   -- 给rabbitmq设置登录的用户名、密码(这里的用户名、密码都为admin)
