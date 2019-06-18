@@ -11,7 +11,8 @@ tee /etc/docker/daemon.json <<-'EOF'
 {
     "registry-mirrors": ["https://0k0953tv.mirror.aliyuncs.com"]
  }
-   EOF
+ 
+ EOF
 
 systemctl daemon-reload
 systemctl restart docker.service 
