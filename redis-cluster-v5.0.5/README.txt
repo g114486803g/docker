@@ -33,7 +33,7 @@ S: 9d4a65012779dbf7e6000478b7aaa0e82e447eb1 172.17.0.6:6379
    replicates bfc39907fa45fa927ea2bc23c1819302344f5e4d
 S: 1b64d6dd945ffb93a68d9c1fd6a9127d7dd62a1d 172.17.0.7:6379
    replicates 09d6f911b2be9a2b620e0f3031819287ea21b2a0
-Can I set the above configuration? (type 'yes' to accept): yes  <<<<<--------请在这部输入yes
+Can I set the above configuration? (type 'yes' to accept): yes  <<<<<--------(温馨提示) 请在这部输入yes
 >>> Nodes configuration updated
 >>> Assign a different config epoch to each node
 >>> Sending CLUSTER MEET messages to join the cluster
