@@ -1,0 +1,33 @@
+首先安装epel扩展源：
+
+　　yum -y install epel-release
+
+　　更新完成之后，就可安装pip：
+
+　　yum -y install python-pip
+
+　　安装完成之后清除cache：
+
+　　yum clean all
+
+#使用pip安装，
+$ yum install python-pip python-dev
+$ pip install docker-compose
+
+卸载
+pip uninstall docker-compose
+
+官方下载安装
+https://docs.docker.com/compose/install/
+
+curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+$ docker-compose --version
+docker-compose version 1.24.0, build 1110ad01
+
+卸载
+rm /usr/local/bin/docker-compose
