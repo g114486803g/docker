@@ -1,3 +1,10 @@
+make PREFIX=/usr/local/redis install
+
+show variables like "%expire_logs_days%";
+
+set global expire_logs_days=15;
+flush logs;
+
 首先安装epel扩展源：
 
 　　yum -y install epel-release
