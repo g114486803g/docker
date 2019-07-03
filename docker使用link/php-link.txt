@@ -1,0 +1,20 @@
+php 环境使用link 先启动MySQL 使用PHP去link MySQL随便起个名字如m_db:mysql 然后在用nginx去link 如php7:php
+(注意nginx配置的PHP如下) 
+        location ~ \.php$ {
+           fastcgi_pass   php:9000;
+           fastcgi_index  index.php;
+           fastcgi_param  SCRIPT_FILENAME  /www/bbc/$fastcgi_script_name;  <<<<php的/www/bbc/目录和nginx的一定要一致
+           include        fastcgi_params;
+        }
+
+
+
+docker run --rm --name m_db -p3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.5
+
+docker run --rm -d --link m_db:mysql --name php7 -p9000:9000 -v /www/bbc:/www/bbc xddxdd/php7-fpm:latest
+
+docker run --rm --name webs  --link php7:php  -p80:80 -v /www/bbc:/www/bbc nginx:v1.16
+
+访问php 记住PHP代码放再php目录
+dfcdeMac-mini:~ dfc$ curl 172.16.8.244/index.php
+hello!i22222222dfcdeMac-mini:~ dfc$ 
