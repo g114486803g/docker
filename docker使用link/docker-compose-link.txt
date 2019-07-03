@@ -1,0 +1,25 @@
+
+version: '2'
+services:
+    php: 
+      image: xddxdd/php7-fpm:latest
+      volumes:
+        - /www/bbc:/abc/bbc 
+      links: 
+        - db
+      ports: 
+        - "9000:9000"
+      environment:
+        WORDPRESS_DB_HOST: db:3306
+        WORDPRESS_DB_PASSWORD: 123456
+    db: 
+      image: mysql:5.5 
+      environment: 
+        - MYSQL_ROOT_PASSWORD=123456
+    web:
+     image: nginx:v1.16
+     links:
+     
+      - php
+     ports:
+       - 80:80
