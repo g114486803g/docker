@@ -18,5 +18,6 @@ USER daemon
 EXPOSE 18031
 ENTRYPOINT java -server -Xverify:none -XX:+UseParallelGC -Xms128M -Xmx256M -jar $MY_JAR --spring.profiles.active=reprod > logs/server.log
 
+#以上dockefile普通用户运行
 #docker run --rm -itd --name  bbbbbb  -v /abc:/java/service/logs jar-adapter:v02
 #请记得宿主机目录/abc目录授权 chown -R daemon:daemon /abc
