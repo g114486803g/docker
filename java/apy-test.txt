@@ -1,0 +1,22 @@
+FROM jdk8:v01
+MAINTAINER JBJB@USABC.com
+
+#RUN mkdir /java/service -p
+WORKDIR  /java/service
+ADD adapter.jar /java/service
+COPY application-reprod.properties /java/service
+#WORKDIR  /java/service
+
+#RUN groupadd -r jsj
+#RUN useradd -r -s /bin/false -g jsj jsj
+#RUN apk add shadow-utils
+RUN chown -R daemon:daemon /java/service/
+ENV MY_JAR /java/service/adapter.jar
+
+USER daemon
+
+EXPOSE 18031
+ENTRYPOINT java -server -Xverify:none -XX:+UseParallelGC -Xms128M -Xmx256M -jar $MY_JAR --spring.profiles.active=reprod > logs/server.log
+
+#docker run --rm -itd --name  bbbbbb  -v /abc:/java/service/logs jar-adapter:v02
+#请记得宿主机目录/abc目录授权 chown -R daemon:daemon /abc
