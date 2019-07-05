@@ -1,0 +1,150 @@
+yum install epel-release
+yum install rpm-python
+yum install dpkg
+yum install python-pip
+
+pip install anchore
+
+#最后这条是撸多了更新数据库
+anchore feeds sync
+实际测试中取决于网络，网络好的话就是下图这样。博主在实际测试中，每次都是差不多有一半是掉线的！
+
+常用功能：
+对镜像进行分析：anchore analyze --image nginx:latest --imagetype base
+生成结果报告：anchore gate --image nginx:latest
+CVE漏洞扫描：anchore query --image nginx:latest cve-scan all
+与纯净镜像的区别：anchore query --image nginx:latest show-file-diffs base
+列表文件详细：anchore query --image nginx:latest list-files-detail all
+镜像特征提取：anchore toolbox --image nginx:latest show
+
+##############################################################################################
+[root@dockersss tmp]# anchore analyze --image mdjw866/php-fpm:7 --imagetype base
+Analyzing image: mdjw866/php-fpm:7
+b1640750a0b0: analyzed.
+
+###################################################################################
+[root@dockersss tmp]# anchore gate --image mdjw866/php-fpm:7
+b1640750a0b033d025c942ef98f4fdb3684070e046623a2615300e38e53d4358: evaluating policies...
+b1640750a0b033d025c942ef98f4fdb3684070e046623a2615300e38e53d4358: evaluated.
+b1640750a0b0: evaluated.
++--------------+-------------------+-----------------+-------------------+----------------------------+-------------+
+| Image Id     | Repo Tag          | Gate            | Trigger           | Check Output               | Gate Action |
++--------------+-------------------+-----------------+-------------------+----------------------------+-------------+
+| b1640750a0b0 | mdjw866/php-fpm:7 | DOCKERFILECHECK | FROMSCRATCH       | 'FROM' container is        | GO          |
+|              |                   |                 |                   | 'scratch' - (scratch)      |             |
+| b1640750a0b0 | mdjw866/php-fpm:7 | ANCHORESEC      | UNSUPPORTEDDISTRO | cannot perform CVE scan:   | WARN        |
+|              |                   |                 |                   | no CVE data is currently   |             |
+|              |                   |                 |                   | available for the detected |             |
+|              |                   |                 |                   | base distro type           |             |
+|              |                   |                 |                   | (debian:8)                 |             |
+| b1640750a0b0 | mdjw866/php-fpm:7 | FINAL           | FINAL             |                            | WARN        |
++--------------+-------------------+-----------------+-------------------+----------------------------+-------------+
+
+#########################################################################################
+[root@dockersss tmp]# anchore query --image mdjw866/php-fpm:7 cve-scan all
++--------+----------+-----------------+--------------------+---------------+------------+----------------+-----+
+| CVE ID | Severity | *Total Affected | Vulnerable Package | Fix Available | Fix Images | Rebuild Images | URL |
++--------+----------+-----------------+--------------------+---------------+------------+----------------+-----+
++--------+----------+-----------------+--------------------+---------------+------------+----------------+-----+
+
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| WarningOutput                                                                                                                             |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| b1640750a0b0 (mdjw866/php-fpm:7) cannot perform CVE scan: no CVE data is currently available for the detected base distro type (debian:8) |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+[root@dockersss tmp]# anchore query --image mdjw866/php-fpm:7 show-file-diffs base
++----------+----------+------------------+------+---------------------------+------------------------+
+| Image Id | Repo Tag | Compare Image Id | File | Input Image File Checksum | Compare Image Checksum |
++----------+----------+------------------+------+---------------------------+------------------------+
++----------+----------+------------------+------+---------------------------+------------------------+
+
+################################################################
+这行太多
+ anchore query --image mdjw866/php-fpm:7 list-files-detail all > scan.txt
+ 
+ 
+ 
+ =========================================================================================
+ 命令	说明
+–force	即使数据库中已存在分析也要进行分析
+–image	处理指定的镜像
+–imagefile	在指定文件中列出镜像ID
+–include-allanchore	包括所有镜像
+–dockerfile <file>	分析docker文件镜像
+–imagetype <typetext>	指定正在分析的镜像类型
+–skipgates	不要将门作为分析的一部分
+–layerstrategy	分析镜像历史中的策略的名称
+------------------------------------------------
+query：
+anchore query --image nginx:latest list-files-detail all
+
+命令	说明
+list-gem-detail	列出增长细节
+show-dockerfile	显示docker文件
+list-python-package-detail	列出python包的细节
+show-pkg-diffs	显示包的差异
+has-final-gateaction	最后关门
+get-retrieved-files	获取检索到的文件
+show-non-packaged-files	显示非打包文件
+show-familytree	显示家庭树
+list-java-package-detail	列出Java包的详细信息
+list-files	列出文件
+list-npms	列出NPM
+list-package-detail	列出包细节
+list-packages	列出包
+list-npm-detail	列出NPM细节
+list-python-packages	列出python软件包
+list-image-attrs	列出图像吸引力
+has-gateaction	关门
+show-layer-info	显示涂层信息
+show-layers	显示图层
+list-gems	列表的增长
+list-package-licenses	列出软件包许可证
+has-package	有包装
+list-java-packages	列出Java包
+list-retrieved-files	列出检索文件
+show-distro	展示发行版
+list-content-search-matches	列表内容搜索匹配
+show-non-packaged-files-diff	显示非打包文件差异
+show-file-diffs	显示文件差异
+list-files-detail	详细列出文件
+cve-scan-simple	简单的漏洞扫描
+size-bins	尺寸
+cve-scan	漏洞扫描
+base-status	基本状态
+distro-bins	分开储物
+common-packages	常用包装
+
+-----------------------------------------------------
+nchore query --image nginx:latest list-files-detail all
+
+命令	说明
+–image	处理指定镜像ID
+–imagefile	在指定文件中列出镜像ID
+–include-allanchore	包括所有已知的镜像
+--------------------- 
+
+gate：
+anchore gate --image nginx:latest
+
+命令	说明
+–force	即使数据库中已存在分析也要进行分析
+–image	处理指定的镜像
+–imagefile	在指定文件中列出镜像ID
+–include-allanchore	包括所有镜像
+–editpolicy	编辑指定镜像的门策略
+–rmpolicy	删除指定镜像的策略，恢复默认策略
+–listpolicy	列出指定镜像的当前门策略
+–updatepolicy <file>	将输入门策略文件存储为指定镜像的策略
+–policy <file>	使用指定的策略文件而不是默认文件
+–run-bundle	使用anchore策略包进行评估
+–bundlefile <file>	从指定文件中使用指定的捆绑JSON
+–usetag <imagetag>	使用指定标签来使用Run评估输入对象
+–resultsonly	只显示评估结果
+–show-gatehelp	显示可用于构建anchore策略的所有门名、触发器和参数
+–show-policytemplate	基于所有安装的门/触发器生成策略模板
+–whitelist	编辑评估的门触发器和可选白名单
+–global-whitelist <file>	使用指定的全局白名单文件
+–show-triggerids	在输出中显示触发的门ID
+–show-whitelisted	展示白名单
+--------------------- 
