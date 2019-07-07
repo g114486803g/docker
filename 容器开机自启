@@ -1,0 +1,6 @@
+Docker容器开机自动启动
+docker run -m 512m --memory-swap 1G -it -p 58080:8080 --restart=alway 或者 docker run --restart always --name mynginx -d nginx
+
+
+如果容器已经被创建，我们想要修改容器的重启策略
+docker update --restart=always xxx  或者 docker update --restart no mynginx
