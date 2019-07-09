@@ -1,0 +1,43 @@
+[root@jen-8-190 openv2]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                      NAMES
+f248fe1e9bd1        openvpn:v0.2.4.6    "/bin/bash"         2 hours ago         Up 2 hours          0.0.0.0:54321->54321/tcp   openvpn
+
+容器导出
+[root@jen-8-190 openv2]# docker export -o openvpn.tar openvpn
+
+容器导入
+docker import openvpn.tar vpn:v246
+
+
+这个问题解决过后继续报错
+
+ERROR: Cannot ioctl TUNSETIFF tun: Operation not permitted (errno=1)
+
+
+创建容器时加入--cap-add NET_ADMIN即可解决
+
+
+ docker run -itd --cap-add NET_ADMIN  --name openvpn  -p54321:54321 vpn:v246 /bin/bash
+
+创建好容器后，执行如下命令，问题得以解决
+
+mkdir /dev/net -pv
+
+mknod /dev/net/tun c 10 200
+
+chmod 666 /dev/net/tun
+
+-------------------------------------------------------------------------------------
+
+
+2.安装epel扩展源
+    yum -y install epel-release
+3.安装openvpn和easy-rsa
+    yum -y install openvpn easy-rsa
+
+
+
+
+docker push g114486803g/1232132:openvpn246
+
+docker tag  g114486803g/1232132:openvpn246  openvpn:v0.4.6
