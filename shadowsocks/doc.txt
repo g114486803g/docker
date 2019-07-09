@@ -1,0 +1,37 @@
+官方的镜像
+docker pull shadowsocks/shadowsocks-libev
+
+
+docker run --rm  -e PASSWORD=5yqew@123 -p13335:18388 -p13335:18388/udp --name v01 -d shadowsocks/shadowsocks-libev
+
+docker run --rm -e PASSWORD=123sad123 -p13334:18384 -p13334:18384/udp  --name v02 -d shadowsocks/shadowsocks-libev 
+
+
+
+我的镜像也是官方拉取的
+docker pull g114486803g/1232132:shadowsocks
+docker tag g114486803g/1232132:shadowsocks shadowsocks:v01
+
+
+运行
+docker run --rm  -e PASSWORD=5yqew@123 -p13335:18388 -p13335:18388/udp --name v01 -d shadowsocks:v01
+docker run --rm -e PASSWORD=123sad123 -p13334:18384 -p13334:18384/udp  --name v02 -d shadowsocks:v01
+
+docker login -u test -p Test123456 harbor.lisea.cn
+
+
+object network IN-1.32
+host 192.168.1.32
+
+object network OUT-48.114
+host 公网IP
+
+object service TCP-9465    
+service tcp source eq 9465  
+
+object service TCP-9465
+service tcp source eq 9465  
+
+
+nat (inside,outside) source stat IN-1.32  OUT-48.114 service TCP-9465 TCP-9465
+access-list NAT extended permit tcp any object IN-1.32 eq 9465
