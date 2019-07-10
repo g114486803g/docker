@@ -80,3 +80,13 @@ chown -R fgh:fgh /data/
 docker run --rm  -itd --cap-add=NET_ADMIN  --name openvpn -v /data/file/psw-file:/usr/local/src/.user/psw-file -p54321:54321 w-openvpn:v0.2.4.6
 
 
+
+最后添加masquerade:
+[root@test39 server]# firewall-cmd --add-masquerade 
+success
+[root@test39 server]# firewall-cmd --permanent --add-masquerade 
+success
+
+以下命令用于确认masquerade是否添加成功：
+[root@test39 server]# firewall-cmd --query-masquerade 
+yes
