@@ -32,8 +32,14 @@ systemctl start docker.service
 
 ----------以上网卡配置结束-------------------------------
 7安装pipework
+wget https://github.com/g114486803g/docker/raw/master/Docker%E6%A1%A5%E6%8E%A5/pipework
 
-cp ~/pipework/pipework /usr/local/bin/
+chmod +x pipework 
+
+[root@zabbix client]# ls -lh pipework 
+-rw-r--r-- 1 root root 15K Jul 10 22:37 pipework
+
+cp pipework /usr/local/bin/
 
 
 docker run --rm  -itd --net=none --name openvpn xx镜像
