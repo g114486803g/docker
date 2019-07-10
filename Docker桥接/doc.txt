@@ -1,0 +1,43 @@
+systemctl stop docker.service 
+ 
+删除docker0网卡
+ip link set dev docker0 down 
+brctl delbr docker0
+
+4新建桥接网卡br0
+brctl addbr br0
+ip link set dev br0 up
+--(这部网络会中断需要登录系统操作)   
+ip addr add 192.168.1.88/24 dev br0
+
+
+#为br0分配物理网络中的ip地址
+ip addr del 192.168.1.109/24 dev  eth0 #将宿主机网卡的IP清空
+brctl addif br0 eth0 #将宿主机网卡挂到br0上
+ip route del default #删除原路由
+ip route add default via 192.168.1.1 dev br0 #为br0设置路由
+
+最后
+vim /etc/sysconfig/docker-network （centos7配置）其他系统可能在/etc/sysconfig/docker下
+
+改成如下行即可：
+DOCKER_NETWORK_OPTIONS="-b=br0"
+
+==================
+[root@vpn opt]# cat /etc/sysconfig/docker-network 
+DOCKER_NETWORK_OPTIONS="-b=br0"
+
+======================
+systemctl start docker.service
+
+----------以上网卡配置结束-------------------------------
+7安装pipework
+
+cp ~/pipework/pipework /usr/local/bin/
+
+
+docker run --rm  -itd --net=none --name openvpn xx镜像
+
+给容器加ip
+pipework br0 openvpn  192.168.1.11/24@192.168.1.88
+（192.168.1.11是分配给容器的ip,1.88是宿主机的ip）
