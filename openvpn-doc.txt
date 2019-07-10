@@ -90,3 +90,9 @@ success
 以下命令用于确认masquerade是否添加成功：
 [root@test39 server]# firewall-cmd --query-masquerade 
 yes
+
+虚拟映射
+iptables -t nat -A POSTROUTING -s 11.2.2.0/24 -j SNAT --to-source 172.16.8.9
+
+https://www.xiaomastack.com/2015/06/03/openvpn-iptables/
+
