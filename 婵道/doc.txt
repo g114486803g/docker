@@ -1,0 +1,14 @@
+https://www.zentao.net/thread/87209.html
+https://hub.docker.com/r/idoop/zentao/
+https://github.com/idoop/zentao
+
+docker pull idoop/zentao
+mkdir -p /data0/zbox 
+
+docker run -d -p 8080:80 -p 3306:3306 -e USER="root" -e PASSWD="12#633asd@Hdsad"  -e BIND_ADDRESS="false" -v /data0/zbox/:/opt/zbox/ --name zentao-server idoop/zentao:latest
+
+
+婵道
+http://ip:8080
+账号amdin
+密码1GDasidc@0905
