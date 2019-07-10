@@ -95,4 +95,6 @@ yes
 iptables -t nat -A POSTROUTING -s 11.2.2.0/24 -j SNAT --to-source 172.16.8.9
 
 https://www.xiaomastack.com/2015/06/03/openvpn-iptables/
+https://www.cnblogs.com/jmaly/p/7272680.html
+
 
