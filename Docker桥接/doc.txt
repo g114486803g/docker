@@ -4,7 +4,7 @@ systemctl stop docker.service
 ip link set dev docker0 down 
 brctl delbr docker0
 
-4新建桥接网卡br0
+新建桥接网卡br0
 brctl addbr br0
 ip link set dev br0 up
 --(这部网络会中断需要登录系统操作)   
@@ -22,12 +22,11 @@ vim /etc/sysconfig/docker-network （centos7配置）其他系统可能在/etc/s
 
 改成如下行即可：
 DOCKER_NETWORK_OPTIONS="-b=br0"
-
 ==================
 [root@vpn opt]# cat /etc/sysconfig/docker-network 
 DOCKER_NETWORK_OPTIONS="-b=br0"
-
 ======================
+
 systemctl start docker.service
 
 ----------以上网卡配置结束-------------------------------
