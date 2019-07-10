@@ -71,3 +71,12 @@ docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
 要删除全部image的话
 
 docker rmi $(docker images -q)
+
+-----------------------
+
+setfacl -m u:fgh:rwx /data/
+chown -R fgh:fgh /data/
+
+docker run --rm  -itd --cap-add=NET_ADMIN  --name openvpn -v /data/file/psw-file:/usr/local/src/.user/psw-file -p54321:54321 w-openvpn:v0.2.4.6
+
+
