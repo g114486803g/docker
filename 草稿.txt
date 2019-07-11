@@ -1,0 +1,59 @@
+ docker run --rm  -itd --cap-add=NET_ADMIN  --name openvpn -v /root/openv/psw-file:/usr/local/src/.user/psw-file  -v /proxy/conf/server.conf:/etc/openvpn/server/server.conf -p54321:54321 density:v01
+
+
+
+
+
+
+ docker run -itd --rm --name proxy  -p 54321:54321 -v /data/file/nginx.conf:/usr/local/nginx/conf/nginx.conf proxy-tcp:v01
+ 
+ 
+
+docker run --rm  -itd --net=none --cap-add=NET_ADMIN  --name openvpn -v /data/file/psw-file:/usr/local/src/.user/psw-file -v /data/file/server.conf:/etc/openvpn/server/server.conf  density:v01
+
+再给dockers一个ip
+pipework br0 openvpn 172.16.8.9/24@172.16.8.7
+
+
+wget http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9b.tgz
+apk add libc-dev make gcc
+apk add make
+apk add gcc
+
+
+
+/opt/shc-3.8.9b
+
+docker run --rm  -itd --net=none --cap-add=NET_ADMIN  --name openvpn -v /data/file/psw-file:/usr/local/src/.user/psw-file -v /data/file/server.conf:/etc/openvpn/server/server.conf w-openvpn:v0.2.4.6
+
+
+docker run --rm  -itd --net=none --cap-add=NET_ADMIN  --name openvpn -v /data/file/psw-file:/usr/local/src/.user/psw-file -v /data/file/server.conf:/etc/openvpn/server/server.conf  dansity:vvv
+
+
+
+docker run --rm  -itd --net=none --cap-add=NET_ADMIN  --name openvpn -v /data/file/psw-file:/usr/local/src/.user/psw-file  w-openvpn:v0.2.4.6 
+
+关掉刚刚打开的22端口
+
+firewall-cmd --zone=public --remove-port=22/tcp --permanent
+
+100到500这之间的端口
+firewall-cmd --zone=public --add-port=100-500/tcp --permanent
+
+
+限制IP为192.168.0.200的地址禁止访问80端口即禁止访问机器
+firewall-cmd --permanent --add-rich-rule="rule family="ipv4" source address="192.168.0.200" port protocol="tcp" port="80" reject"
+
+
+解除刚才被限制的192.168.0.200
+firewall-cmd --permanent --add-rich-rule="rule family="ipv4" source address="192.168.0.200" port protocol="tcp" port="80" accept"
+
+再查看规则设置发现已经没有192.168.0.200的限制了
+firewall-cmd --zone=public --list-rich-rules
+
+需要限制10.0.0.0-10.0.0.255这一整个段的IP，禁止他们访问
+
+firewall-cmd --permanent --add-rich-rule="rule family="ipv4" source address="10.0.0.0/24" port protocol="tcp" port="80" reject"
+
+
+https://blog.csdn.net/ywd1992/article/details/80401630
