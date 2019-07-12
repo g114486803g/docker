@@ -25,3 +25,26 @@ AddressFamily inet
 PermitRootLogin yes
 SyslogFacility AUTHPRIV
 PasswordAuthentication no
+
+
+
+查找僵尸进程
+ps -A -o stat,ppid,pid,cmd | grep -e '^[Zz]'
+
+kill -9 ppid pid
+
+一次kill
+ps -A -o stat,ppid,pid,cmd | grep -e '^[Zz]' | awk '{print $2}' | xargs kill -9
+
+
+
+
+
+chattr +i /etc/passwd /etc/shadow /boot/grub2/grub.cfg /etc/gshadow /etc/inittab
+
+
+
+                                                                  
+find /ebtcotc -type d -exec chmod 755 {} \;
+
+find /ebtcotc -type f -exec chmod 644 {} \;
