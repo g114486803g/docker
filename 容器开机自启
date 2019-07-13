@@ -4,3 +4,15 @@ docker run -m 512m --memory-swap 1G -it -p 58080:8080 --restart=alway 或者 doc
 
 如果容器已经被创建，我们想要修改容器的重启策略
 docker update --restart=always xxx  或者 docker update --restart no mynginx
+
+
+
+----------------------------------------------------
+容器的开机启动
+docker run -itd --restart always --name java adapter:v01
+
+如果容器已经被创建，不想让容器重启
+docker update --restart no java
+
+如果创建时未指定 --restartalways ,可通过update 命令添加开机重启
+docker update --restart always java
