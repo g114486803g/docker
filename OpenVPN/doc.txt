@@ -1,0 +1,9 @@
+启动容器
+docker run --rm -itd --net=none  --name openvpn --cap-add=NET_ADMIN  -v /data/file/psw-file:/usr/local/src/.user/psw-file -v /data/file/server.conf:/etc/openvpn/server/server.conf w-openvpn:v0.2.4.6
+
+给Vpn配置桥接网络
+pipework br0 openvpn 172.16.8.91/24@172.16.8.99
+
+再启动VPN代理
+docker run -d --rm --name proxy  -p 54321:54321 -v /data/file/nginx.conf:/usr/local/nginx/conf/nginx.conf proxy-tcp:v01
+
