@@ -1,10 +1,11 @@
 官方的镜像
 docker pull shadowsocks/shadowsocks-libev
+docker run -e PASSWORD=<password> -p<server-port>:8388 -p<server-port>:8388/udp -d shadowsocks/shadowsocks-libev
 
 
-docker run --rm  -e PASSWORD=5yqew@123 -p13335:18388 -p13335:18388/udp --name v01 -d shadowsocks/shadowsocks-libev
+docker run --rm  -e PASSWORD=5yqew@123 -p13335:8388 -p13335:8388/udp --name v01 -d shadowsocks/shadowsocks-libev
 
-docker run --rm -e PASSWORD=123sad123 -p13334:18384 -p13334:18384/udp  --name v02 -d shadowsocks/shadowsocks-libev 
+docker run --rm -e PASSWORD=123sad123 -p13334:8388 -p13334:8388/udp  --name v02 -d shadowsocks/shadowsocks-libev 
 
 
 
