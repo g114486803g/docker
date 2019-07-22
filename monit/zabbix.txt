@@ -1,0 +1,4 @@
+docker pull zabbix/zabbix-appliance
+docker run --name some-zabbix-appliance -p 80:80 -p 10051:10051 -d zabbix/zabbix-appliance:tag
+docker exec -ti some-zabbix-appliance /bin/bash
+docker logs some-zabbix-appliance
