@@ -1,0 +1,2 @@
+https://github.com/jesseduffield/lazydocker/releases
+https://gitee.com/mirrors/lazydocker
