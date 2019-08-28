@@ -1,0 +1,22 @@
+下载
+wget https://storage.googleapis.com/harbor-releases/release-1.8.0/harbor-offline-installer-v1.8.2.tgz
+
+tar xvf /tmp/harbor-offline-installer-v1.8.2.tgz -C /usr/local/
+cd /usr/local/harbor
+ 
+#  编辑配置文件 harbor.yml
+vim  harbor.yml 
+#  需要更改的参数
+hostname: 192.168.15.170  # 绑定ip,不能使用127.0.0.1和localhost
+http:  # 监听端口，默认80，也就是我们 管理ui访问的端口
+  port: 80
+harbor_admin_password: Harbor12345 # 设置管理员密码
+## 还可以设置启动 https，并指定证书，和指定数据目录
+
+# 安装 
+./install.sh
+
+默认是使用 HTTP 协议，我们可以配置证书并使用 HTTPS 来访问 Harbor。
+
+https://github.com/goharbor/harbor/blob/master/docs/configure_https.md
+
