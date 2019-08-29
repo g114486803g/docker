@@ -1,3 +1,4 @@
+一，需要安装docker-compose
 下载
 wget https://storage.googleapis.com/harbor-releases/release-1.8.0/harbor-offline-installer-v1.8.2.tgz
 
@@ -16,7 +17,95 @@ harbor_admin_password: Harbor12345 # 设置管理员密码
 # 安装 
 ./install.sh
 
-默认是使用 HTTP 协议，我们可以配置证书并使用 HTTPS 来访问 Harbor。
+--------------------------------------------------------------
+
+二.默认是使用 HTTP 协议，我们可以配置证书并使用 HTTPS 来访问 Harbor。
 
 https://github.com/goharbor/harbor/blob/master/docs/configure_https.md
 
+#1. 创建存放证书的目录
+mkdir -p /data/cert/
+cd   /data/cert/
+# 创建自签名证书key文件
+openssl genrsa -out ca.key 4096
+openssl req -x509 -new -nodes -sha512 -days 365 -subj "/C=CN/ST=Dapo/L=Dapo/O=example/OU=Personal/CN=192.168.1.141" -key ca.key -out ca.crt
+
+#2.配置 HTTPS 配置
+https:
+#   # https port for harbor, default is 443
+   port: 443
+#   # The path of cert and key files for nginx
+   certificate: /data/cert/ca.crt
+   private_key: /data/cert/ca.key
+
+3.重新初始化集群
+
+# 暂停
+docker-compose down -v
+./prepare  # 生成配置文件，根据 harbor.yml 配置生成docker-compose文件。
+docker-compose up -d  # 后台启动
+
+#4.客户端配置
+将 Harbor 生成的证书 /data/cert/ca.crt 复制到 客户端的 /etc/docker/certs.d/仓库域名/。
+然后重启docker 。
+docker  login  仓库域名 
+
+----------------------------------------------------------------------------------
+
+登录网址 ： ip，http://192.168.1.141
+
+默认的用户名和密码是：
+
+用户名：admin
+密码： Harbor12345
+
+登录 Harbor 并创建一个私有项目 test
+++++++++++++++++++++++++++++++++++++++++
+# 登录报错
+[root@localhost harbor]# docker  login  192.168.1.141
+Username: admin
+Password: 
+Error response from daemon: Get https://192.168.1.141/v2/: dial tcp 192.168.15.170:443: connect: connection refused
+
+#1.编辑daemon.json文件
+[root@mster ~]# cat /etc/docker/daemon.json
+{
+    "registry-mirrors": ["https://0k0953tv.mirror.aliyuncs.com"]
+ }
+ 
+#添加以下
+{
+    "insecure-registries": [
+        "192.168.1.141"
+    ]
+}
+
+2.编辑配置文件  /usr/lib/systemd/system/docker.service
+#ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+ExecStart=/usr/bin/dockerd --insecure-registry=192.168.1.141
+
+-===========================================
+
+# 暂停 Harbor
+docker-compose  stop
+# 启动 Harbor
+docker-compose  start
+
+
+# 更改 harbor.yml,1.8.0之前的版本配置文件是 harbor.cfg 
+docker-compose  down -v 
+vim  harbor.yml # 更改配置
+prepare  # 生成配置文件，根据 harbor.yml 配置生成docker-compose文件。
+docker-compose up -d
+
+# 删除 Harbor 的容器，将镜像数据和 Harbor的数据库文件保存在文件系统上。
+docker-compose  down -v 
+
+# 彻底地删除 Harbor 的数据和镜像
+ rm -r /data/database
+ rm -r /data/registry
+ 
+ 
+ ###########
+参考链接
+https://www.cnblogs.com/operationhome/p/10868498.html
