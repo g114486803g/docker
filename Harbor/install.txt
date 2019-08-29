@@ -60,6 +60,8 @@ docker  login  仓库域名
 密码： Harbor12345
 
 登录 Harbor 并创建一个私有项目 test
+
+
 ++++++++++++++++++++++++++++++++++++++++
 # 登录报错
 [root@localhost harbor]# docker  login  192.168.1.141
@@ -81,10 +83,15 @@ Error response from daemon: Get https://192.168.1.141/v2/: dial tcp 192.168.15.1
 }
 
 2.编辑配置文件  /usr/lib/systemd/system/docker.service
+注释上面这条,添加下面那条
 #ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 ExecStart=/usr/bin/dockerd --insecure-registry=192.168.1.141
 
--===========================================
+重启docker生效
+systemctl daemon-reload
+systemctl restart docker
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # 暂停 Harbor
 docker-compose  stop
