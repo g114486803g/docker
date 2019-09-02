@@ -1,0 +1,18 @@
+FROM alpine:latest
+MAINTAINER NGINX "123@126.com"
+
+# 修改源
+RUN echo "http://mirrors.aliyun.com/alpine/latest-stable/main/" > /etc/apk/repositories && \
+    echo "http://mirrors.aliyun.com/alpine/latest-stable/community/" >> /etc/apk/repositories
+
+
+# 安装需要的软件
+RUN apk update && \
+    apk add --no-cache curl nginx && \
+    apk add --no-cache  bash tree tzdata && \
+    cp -rf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    mkdir /run/nginx/
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
