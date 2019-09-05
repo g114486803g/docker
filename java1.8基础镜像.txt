@@ -2,3 +2,7 @@
 docker pull registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine_jdk8
 docker tag registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine_jdk8 alpine/jdk8:v01
 docker rmi registry.cn-shenzhen.aliyuncs.com/jbjb/alpine:alpine_jdk8 
+
+
+参考dockerfile###将jar放入镜像
+https://github.com/g114486803g/docker/raw/master/alpine-jdk8/file/Dockerfile
