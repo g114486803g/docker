@@ -1,0 +1,31 @@
+docker commit :从容器创建一个新的镜像。
+# docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
+-a :提交的镜像作者；
+-c :使用Dockerfile指令来创建镜像；
+-m :提交时的说明文字；
+-p :在commit时，将容器暂停。
+
+
+
+
+[root@jenkins tmp]# docker ps 
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+5c25cc8bfcde        rediss:v5           "/run.sh"           13 minutes ago      Up 13 minutes                           adsdsa
+[root@jenkins tmp]# docker commit -a "newges" adsdsa new-redis:v00
+sha256:6f25fbc8b49d154ec08c152b9c8e592afea1052fc2e5c8f902981ee69e39794e
+
+[root@jenkins tmp]# docker images 
+REPOSITORY                                      TAG                 IMAGE ID            CREATED             SIZE
+new-redis                                       v00                 6f25fbc8b49d        3 seconds ago       25.4MB
+rediss                                          v5                  d6662ee45343        2 days ago          16.9MB
+
+导出
+[root@jenkins tmp]# docker save -o new-redis.tar new-redis:v00 
+[root@jenkins tmp]# ls
+new-redis.tar  
+
+
+导入
+[root@node21 tmp]# docker load -i new-redis.tar 
+d81b5e46182c: Loading layer [==================================================>]  8.621MB/8.621MB
+Loaded image: new-redis:v00
