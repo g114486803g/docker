@@ -1,0 +1,61 @@
+apk add php7-fpm php7-mcrypt php7-soap php7-openssl php7-gmp php7-pdo_odbc php7-json php7-dom php7-pdo php7-zip php7-mysqli php7-bcmath php7-gd php7-odbc php7-pdo_mysql php7-gettext php7-xmlreader php7-xmlrpc php7-bz2 php7-iconv php7-curl php7-ctype php7-redis
+
+-------------------------------------
+worker_processes  1;
+error_log  logs/error.log  info;
+pid        logs/nginx.pid;
+events {
+    worker_connections  1024;
+}
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log  logs/access.log  main;
+    sendfile        on;
+    keepalive_timeout  65;
+    server {
+        listen       80;
+        server_name  localhost;
+        location / {
+            root   html;
+            index  index.php index.html index.htm;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+        location ~ \.php$ {
+            #写上容器里的IP
+            fastcgi_pass   172.17.0.8:9000;
+            fastcgi_index  index.php;
+            fastcgi_param   SCRIPT_FILENAME /usr/local/nginx/html$fastcgi_script_name;   <<<<-/usr/local/nginx/html 目录必须存在
+            include        fastcgi_params;
+        }
+    }
+}
+
+-----------------------------------------
+php-fpm配置文件
+
+# 这里拷贝其他服务器的配置文件，以下为需要修改的内容
+user = nginx                           # 可以不用修改
+group = nginx                          # 可以不用修改
+listen = 0.0.0.0:9000
+; listen.allowed_clients = 127.0.0.1   # 这里默认是打开的，一定要注释，否则无法访问9000端口
+
+
+
+
+进入容器创建相同目录和nginx的一样 否则无法解析php
+docker exec -it new-php sh
+
+
+mkdir /usr/local/nginx/html -p
+ vi /usr/local/nginx/html/test.php
+
+
+获取镜像
+docker pull registry.cn-shenzhen.aliyuncs.com/jbjb/test:alpine-php-fpm-73
