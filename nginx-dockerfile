@@ -2,16 +2,14 @@ FROM alpine:latest
 MAINTAINER NGINX "123@126.com"
 
 # 修改源
-RUN echo "http://mirrors.aliyun.com/alpine/latest-stable/main/" > /etc/apk/repositories && \
-    echo "http://mirrors.aliyun.com/alpine/latest-stable/community/" >> /etc/apk/repositories
-
-
-# 安装需要的软件
-RUN apk update && \
-    apk add --no-cache curl nginx && \
-    apk add --no-cache  bash tree tzdata && \
-    cp -rf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+RUN echo http://mirrors.aliyun.com/alpine/v3.11/main/ > /etc/apk/repositories && \
+    echo http://mirrors.aliyun.com/alpine/v3.11/community/ >> /etc/apk/repositories && \
+    apk update && apk upgrade && \
+    apk add tzdata bash-doc bash nginx && \
+    ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
+    echo $TIMEZONE > /etc/timezone &&\
     mkdir /run/nginx/
+    
 
 EXPOSE 80
 
