@@ -1,0 +1,80 @@
+ Docker Root Dir: /var/lib/docker   <---修改前
+ Debug Mode: false
+ Registry: https://index.docker.io/v1/
+ Labels:
+ Experimental: false
+ Insecure Registries:
+  127.0.0.0/8
+ Registry Mirrors:
+  https://registry.docker-cn.com/
+ Live Restore Enabled: false
+
+
+关闭docker
+2.     将文件移到指定目录：
+[root@localhost docker]# cd /var/lib/
+
+文件复制：
+
+[root@localhost lib]# mv docker/*/home/dockerfile
+
+进入/home/dockerfile创建软连接
+
+ln -s/home/dockerfile/ /var/lib/docker
+
+vim /usr/lib/systemd/system/docker.service
+
+ExecStart=/usr/bin/dockerd -H fd:// --graph=/dockers --containerd=/run/containerd/containerd.sock
+
+
+添加--graph=/dockers
+
+
+
+systemctl daemon-reload 
+systemctl restart docker.service
+
+
+
+
+ Docker Root Dir: /dockers   <<<----修改后
+ Debug Mode: false
+ Registry: https://index.docker.io/v1/
+ Labels:
+ Experimental: false
+ Insecure Registries:
+  127.0.0.0/8
+ Registry Mirrors:
+  https://registry.docker-cn.com/
+ Live Restore Enabled: false
+
+
+
+
+
+[root@aming ~]# df -h
+文件系统        容量  已用  可用 已用% 挂载点
+devtmpfs        2.0G     0  2.0G    0% /dev
+tmpfs           2.0G     0  2.0G    0% /dev/shm
+tmpfs           2.0G   12M  2.0G    1% /run
+tmpfs           2.0G     0  2.0G    0% /sys/fs/cgroup
+/dev/sda3       8.0G  2.6G  5.5G   33% /
+/dev/sda1      1014M  141M  874M   14% /boot
+tmpfs           407M     0  407M    0% /run/user/0
+/dev/sdb         20G   33M   20G    1% /dockers
+
+
+[root@aming ~]# ll /dockers/
+总用量 0
+drwx------ 2 root root 24 4月   3 21:17 builder
+drwx--x--x 4 root root 92 4月   3 21:17 buildkit
+drwx------ 2 root root  6 4月   3 21:17 containers
+drwx------ 3 root root 22 4月   3 21:17 image
+drwxr-x--- 3 root root 19 4月   3 21:17 network
+drwx------ 3 root root 15 4月   3 21:17 overlay2
+drwx------ 4 root root 32 4月   3 21:17 plugins
+drwx------ 2 root root  6 4月   3 21:17 runtimes
+drwx------ 2 root root  6 4月   3 21:17 swarm
+drwx------ 2 root root  6 4月   3 21:17 tmp
+drwx------ 2 root root  6 4月   3 21:17 trust
+drwx------ 2 root root 25 4月   3 21:17 volumes
