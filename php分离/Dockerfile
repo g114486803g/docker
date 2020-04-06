@@ -4,8 +4,8 @@ MAINTAINER jbjb@jb.com
 # 修正时区
 ENV TIMEZONE Asia/Shanghai
 
-RUN echo http://mirrors.aliyun.com/alpine/v3.10/main/ > /etc/apk/repositories && \
-    echo http://mirrors.aliyun.com/alpine/v3.10/community/ >> /etc/apk/repositories && \
+RUN echo http://mirrors.aliyun.com/alpine/v3.11/main/ > /etc/apk/repositories && \
+    echo http://mirrors.aliyun.com/alpine/v3.11/community/ >> /etc/apk/repositories && \
     apk update && apk upgrade && \
     apk add tzdata bash-doc bash && \
     apk add php7 php7-dev php7-fpm && \
