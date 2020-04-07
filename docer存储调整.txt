@@ -22,6 +22,13 @@
 
 ln -s/home/dockerfile/ /var/lib/docker
 
+vim /etc/docker/daemon.json
+
+{
+  "graph":"/dockers"
+}
+
+
 vim /usr/lib/systemd/system/docker.service
 
 ExecStart=/usr/bin/dockerd -H fd:// --graph=/dockers --containerd=/run/containerd/containerd.sock
