@@ -1,5 +1,62 @@
 alertmanager 微信报警
 
+
+ prometheus服务端 配置添加 /opt/monit-config/node.rules
+ 
+ cat /usr/local/src/prometheus-2.17.1.linux-amd64/prometheus.yml
+ .....省略10万字
+ rule_files:
+  - "/opt/monit-config/*.yml"
+  - "/opt/monit-config/*.rules"
+
+
+[root@ceph194 prometheus-2.17.1.linux-amd64]# ll  /opt/monit-config/*.rules
+-rw-r--r-- 1 root root 1160 4月   8 23:25 /opt/monit-config/node.rules
+-rw-r--r-- 1 root root  313 4月   8 18:25 /opt/monit-config/second_rules.rules
+
+我的配置
+cat  /opt/monit-config/node.rules 
+groups:
+- name: node.rules
+  rules:
+  - alert: NodeFilesystemUsage
+    expr: 100 - (node_filesystem_free_bytes{fstype=~"ext4|xfs"} / node_filesystem_size_bytes{fstype=~"ext4|xfs"} * 100) > 85
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.instance}}: {{$labels.mountpoint }} 分区使用过高"
+      description: "{{$labels.instance}}: {{$labels.mountpoint }} 分区使用大于 85% (当前值: {{ $value }})"
+  - alert: NodeMemoryUsage
+    expr: 100 - (node_memory_MemFree_bytes+node_memory_Cached_bytes+node_memory_Buffers_bytes) / node_memory_MemTotal_bytes * 100 > 80
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.instance}}: 内存使用过高"
+      description: "{{$labels.instance}}: 内存使用大于 80% (当前值: {{ $value }})"
+  - alert: NodeCPUUsage
+    expr: 100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance) * 100) > 75
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.instance}}: CPU使用过高"
+      description: "{{$labels.instance}}: CPU使用大于 75% (当前值: {{ $value }})"
+
+重置生效 prometheus
+# 第一种，向prometheus进行发信号
+kill -HUP  pid
+
+# 第二种，向prometheus发送HTTP请求
+# /-/reload只接收POST请求，并且需要在启动prometheus进程时，指定 --web.enable-lifecycle
+curl -XPOST http://prometheus.chenlei.com/-/reload
+
+
+-------------------------服务器端配置完成-------------------------------------------
+
+-------------alertmanager告警端----------------------------------
+
 alertmanager.yml
 
 #########################################
