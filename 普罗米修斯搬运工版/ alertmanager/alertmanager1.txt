@@ -1,0 +1,57 @@
+alertmanager 微信报警
+
+alertmanager.yml
+
+#########################################
+global:
+  resolve_timeout: 2m
+  wechat_api_url: 'https://qyapi.weixin.qq.com/cgi-bin/'
+  wechat_api_secret: 'EKOIrYwDFsLumBQKhIQgL0ZL-ekxYfD7MYc9ch8QXCY'
+  wechat_api_corp_id: 'wx2a617760f6ffb5c0'
+
+templates:
+  - '/alertmanager/wechat.tmpl'  <<--------微信模板
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 120s
+  receiver: 'wechat'
+receivers:
+- name: 'wechat'
+  wechat_configs:
+  - send_resolved: true
+    to_party: '2'
+    agent_id: '5'
+
+参数说明：
+corp_id: 企业微信账号唯一 ID， 可以在我的企业中查看。
+to_party: 需要发送的组。
+agent_id: 第三方企业应用的 ID，可以在自己创建的第三方企业应用详情页面查看。
+api_secret: 第三方企业应用的密钥，可以在自己创建的第三方企业应用详情页面查看
+
+
+###############################################
+
+wechat 模板
+cat /alertmanager/wechat.tmpl
+
+{{ define "wechat.default.message" }}
+{{ range $i, $alert :=.Alerts }}
+===alertmanager监控告警===
+告警状态：{{   .Status }}
+告警级别：{{ $alert.Labels.severity }}
+告警类型：{{ $alert.Labels.alertname }}
+告警应用：{{ $alert.Annotations.summary }}
+故障主机: {{ $alert.Labels.instance }}
+告警主题: {{ $alert.Annotations.summary }}
+触发阀值：{{ $alert.Annotations.value }}
+告警详情: {{ $alert.Annotations.description }}
+触发时间: {{ $alert.StartsAt.Format "2006-01-02 15:04:05" }}
+===========end============
+{{ end }}
+{{ end }}
+
+可以使用我的已经做好镜像
+docker push registry.cn-shenzhen.aliyuncs.com/jbjb/test:wechat-alertmanager01
