@@ -1,0 +1,84 @@
+groups:
+- name: Host
+  rules:
+  - alert: Memory Usage
+    expr: (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) / node_memory_MemTotal_bytes * 100 > 80 
+    for: 2m
+    labels:
+      name: Memory
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: "宿主机内存使用率超过80%."
+      value: "{{ $value }}"
+
+  - alert: CPU Usage
+    expr: 100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance) * 100) > 85
+    for: 2m
+    labels:
+      name: CPU
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: "宿主机CPU使用率超过85%"
+      value: "{{ $value }}"
+
+
+  - alert: HostLoad 
+    expr: node_load5 > 2
+    for: 5m
+    labels:
+      name: Load
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.appname }} "
+      description: " 主机负载5分钟超过80%."
+      value: "{{ $value }}"
+
+
+  - alert: Filesystem Usage
+    #expr: 1-(node_filesystem_free_bytes / node_filesystem_size_bytes) > 0.3
+    expr: 100 - (node_memory_MemFree_bytes+node_memory_Cached_bytes+node_memory_Buffers_bytes) / node_memory_MemTotal_bytes * 100 > 80
+    for: 5m
+    labels:
+      name: Disk
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: " 宿主机 [ {{ $labels.mountpoint }} ]分区使用超过80%."
+      value: "{{ $value }}%"
+
+
+  - alert: Diskio writes
+    expr: irate(node_disk_writes_completed_total{job=~"Host"}[1m]) > 60
+    for: 3m
+    labels:
+      name: Diskio
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: " 宿主机 [{{ $labels.device }}]磁盘1分钟平均写入IO负载较高超过(writes 60%)."
+      alue: "{{ $value }}iops"
+
+  - alert: Diskio reads
+    expr: irate(node_disk_reads_completed_total{job=~"Host"}[1m]) > 50
+    for: 3m
+    labels:
+      name: Diskio
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: " 宿主机 [{{ $labels.device }}]磁盘1分钟平均读取IO负载较高(reads 50% )."
+      value: "{{ $value }}iops"
+
+  - alert: Network_transmit
+    expr: irate(node_network_transmit_bytes_total{device!~"lo|bond[0-9]|cbr[0-9]|veth.|virbr.|ovs-system"}[5m]) / 1048576 > 36
+    for: 5m
+    labels:
+      name: Network_transmit
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: " 宿主机 [{{ $labels.device }}] 网卡5分钟内平均发送流量超过36Mbps."
+      value: "{{ $value }}Mbps"
+
