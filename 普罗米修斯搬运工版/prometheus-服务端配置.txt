@@ -10,7 +10,7 @@ Documentation=Prometheus Monitoring System
 ExecStart=/usr/local/bin/prometheus \
   --config.file=/usr/local/src/prometheus-2.17.1.linux-amd64/prometheus/prometheus.yml \
   --web.listen-address=:9090 \
-  --web.enable-lifecycle
+  --web.enable-lifecycle   <<<开启热web启动  （curl -XPOST http://10.98.2.194:9090/-/reload）
  
 [Install]
 WantedBy=multi-user.target
