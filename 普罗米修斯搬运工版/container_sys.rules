@@ -1,0 +1,49 @@
+groups:
+- name: Container
+  rules:
+  - alert: CPU Usage
+    expr: (sum by(name,instance) (rate(container_cpu_usage_seconds_total{image!=""}[5m]))*100) > 80
+    for: 1m
+    labels:
+      name: CPU
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.name }} "
+      description: " 容器CPU使用超过80%"
+      value: "{{ $value }}%"
+
+
+  - alert: Memory Usage
+    expr: (container_memory_usage_bytes{name=~".+"} - container_memory_cache{name=~".+"}) / container_spec_memory_limit_bytes{name=~".+"} * 100 > 80
+    for: 1m
+    labels:
+      name: Memory
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.name }} "
+      description: " 容器内存使用超过80%."
+      value: "{{ $value }}%"
+
+
+  - alert: Network_receive
+    expr: irate(container_network_receive_bytes_total{name=~".+",interface=~"eth.+"}[5m]) / 1048576 > 20
+    for: 1m
+    labels:
+      name: Network_receive
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.name }} "
+      description: "容器 [{{ $labels.device }}] 网卡5分钟平均接收流量超过20Mbps."
+      value: "{{ $value }}Mbps"
+
+
+  - alert: Network_transmit
+    expr: irate(container_network_transmit_bytes_total{name=~".+",interface=~"eth.+"}[5m]) / 1048576 > 20
+    for: 1m
+    labels:
+      name: Network_transmit
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.name }} "
+      description: "容器 [{{ $labels.device }}] 网卡5分钟平均发送流量超过20Mbps."
+      value: "{{ $value }}Mbps"
