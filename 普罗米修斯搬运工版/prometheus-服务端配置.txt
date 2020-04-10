@@ -28,6 +28,19 @@ EOF
 
 chmod +x startw.sh && bash startw.sh
 
+
+
+容器启动
+------------------
+#服务端prometheus
+docker run -p 9090:9090 -v /monit/config:/etc/prometheus prom/prometheus:latest
+#语法检测
+docker exec -it prometheus promtool check config /etc/prometheus/prometheus.yml
+#重置
+docker exec -it prometheus kill -HUP  1
+
+-------------------
+
 cat prometheus.yml
 
 global:
