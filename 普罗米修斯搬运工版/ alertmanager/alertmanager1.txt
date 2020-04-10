@@ -113,6 +113,6 @@ cat /alertmanager/wechat.tmpl
 可以使用我的已经做好镜像
 docker push registry.cn-shenzhen.aliyuncs.com/jbjb/test:wechat-alertmanager01
 
-registry.cn-shenzhen.aliyuncs.com/jbjb/test:wechat888
+docker push registry.cn-shenzhen.aliyuncs.com/jbjb/test:wechat888
 
 
