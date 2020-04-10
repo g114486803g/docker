@@ -1,0 +1,232 @@
+cp /usr/local/src/prometheus-2.17.1.linux-amd64/prometheus /usr/local/bin/
+
+cat <<EOF > /etc/systemd/system/prometheus.service
+
+[Unit]
+Description=Prometheus Monitoring System
+Documentation=Prometheus Monitoring System
+ 
+[Service]
+ExecStart=/usr/local/bin/prometheus \
+  --config.file=/usr/local/src/prometheus-2.17.1.linux-amd64/prometheus/prometheus.yml \
+  --web.listen-address=:9090 \
+  --web.enable-lifecycle
+ 
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat <<EOF > startw.sh
+
+systemctl daemon-reload
+systemctl enable prometheus
+systemctl start prometheus
+ss -tnul | grep 9100
+firewall-cmd --state
+
+EOF
+
+chmod +x startw.sh && bash startw.sh
+
+cat prometheus.yml
+
+global:
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - 10.98.2.196:9093
+rule_files:
+  - "/opt/monit-config/*.yml"   <<---告警设置
+  - "/opt/monit-config/*.rules" <<---告警设置
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+    - targets: ['localhost:9090']
+  - job_name: 'node_exporter_centos'
+    scrape_interval: 5s
+    static_configs:
+    - targets: ['localhost:9100']
+      labels:
+        instance: 'host1'
+  - job_name: 'k8s-master'
+    scrape_interval: 5s
+    static_configs:
+    - targets: ['10.98.2.190:9100']
+      labels:
+        instance: 'k8s-master'
+  - job_name: 'linux-os'
+    file_sd_configs:
+      - files: ['/opt/monit-config/conf/*.yml']  <<<<-------在线配置开启
+        refresh_interval: 10s
+
+在热配置 <<<----只需要添加被监控端即可
+cat linux-os.yml 
+- targets: ['10.98.2.191:9100','10.98.2.192:9100','10.98.2.196:9100']
+
+
+[root@ceph194 monit-config]# ll /opt/monit-config/*.rules
+-rw-r--r-- 1 root root 1513 4月  10 11:23 /opt/monit-config/container_sys.rules
+-rw-r--r-- 1 root root 2506 4月  10 14:07 /opt/monit-config/hosts-os.rules
+-rw-r--r-- 1 root root  313 4月   8 18:25 /opt/monit-config/second_rules.rules
+
+cat second_rules.rules 
+
+groups:
+- name: zus
+  rules:
+
+  - alert: InstanceDown   
+    expr: up == 0  
+    for: 5s       
+    labels:
+      severity: dansss
+    annotations:
+      summary: "Instance {{ $labels.instance }} 挂了"
+      #description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
+      
+-----------------
+[root@ceph194 monit-config]# cat hosts-os.rules 
+groups:
+- name: Host
+  rules:
+  - alert: Memory Usage
+    expr: (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) / node_memory_MemTotal_bytes * 100 > 80 
+    for: 1m
+    labels:
+      #name: Memory
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: "宿主机内存使用率超过80%."
+      #value: "{{ $value }}"
+
+  - alert: CPU Usage
+    expr: 100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance) * 100) > 75
+    for: 2m
+    labels:
+      #name: CPU
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: "宿主机CPU使用率超过75%."
+      #value: "{{ $value }}"
+
+
+  - alert: HostLoad 
+    expr: node_load5 > 4
+    for: 1m
+    labels:
+      #name: Load
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.appname }} "
+      description: " 主机负载5分钟超过4."
+      #value: "{{ $value }}"
+
+
+  - alert: Filesystem Usage
+    expr: 1-(node_filesystem_free_bytes / node_filesystem_size_bytes) > 0.3
+    for: 1m
+    labels:
+      #name: Disk
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: " 宿主机 [ {{ $labels.mountpoint }} ]分区使用超过80%."
+      #value: "{{ $value }}%"
+
+
+  - alert: Diskio writes
+    expr: irate(node_disk_writes_completed_total{job=~"Host"}[1m]) > 60
+    for: 1m
+    labels:
+      #name: Diskio
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: " 宿主机 [{{ $labels.device }}]磁盘1分钟平均写入IO负载较高超过(writes 60%)."
+      #alue: "{{ $value }}iops"
+
+  - alert: Diskio reads
+    expr: irate(node_disk_reads_completed_total{job=~"Host"}[1m]) > 50
+    for: 1m
+    labels:
+      #name: Diskio
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: " 宿主机 [{{ $labels.device }}]磁盘1分钟平均读取IO负载较高(reads 50% )."
+      #value: "{{ $value }}iops"
+
+  - alert: Network_transmit
+    expr: irate(node_network_transmit_bytes_total{device!~"lo|bond[0-9]|cbr[0-9]|veth.|virbr.|ovs-system"}[5m]) / 1048576 > 20
+    for: 1m
+    labels:
+      #name: Network_transmit
+      severity: Warning
+    annotations:
+      summary: " {{ $labels.appname }} "
+      description: " 宿主机 [{{ $labels.device }}] 网卡5分钟内平均发送流量超过20Mbps."
+      #value: "{{ $value }}Mbps"
+
+---------------------------
+[root@ceph194 monit-config]# cat container_sys.rules 
+groups:
+- name: Container
+  rules:
+  - alert: CPU Usage
+    expr: (sum by(name,instance) (rate(container_cpu_usage_seconds_total{image!=""}[5m]))*100) > 80
+    for: 1m
+    labels:
+      name: CPU
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.name }} "
+      description: " 容器CPU使用超过80%"
+      value: "{{ $value }}%"
+
+
+  - alert: Memory Usage
+    expr: (container_memory_usage_bytes{name=~".+"} - container_memory_cache{name=~".+"}) / container_spec_memory_limit_bytes{name=~".+"} * 100 > 80
+    for: 1m
+    labels:
+      name: Memory
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.name }} "
+      description: " 容器内存使用超过80%."
+      value: "{{ $value }}%"
+
+
+  - alert: Network_receive
+    expr: irate(container_network_receive_bytes_total{name=~".+",interface=~"eth.+"}[5m]) / 1048576 > 20
+    for: 1m
+    labels:
+      name: Network_receive
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.name }} "
+      description: "容器 [{{ $labels.device }}] 网卡5分钟平均接收流量超过20Mbps."
+      value: "{{ $value }}Mbps"
+
+
+  - alert: Network_transmit
+    expr: irate(container_network_transmit_bytes_total{name=~".+",interface=~"eth.+"}[5m]) / 1048576 > 20
+    for: 1m
+    labels:
+      name: Network_transmit
+      severity: Warning
+    annotations:
+      summary: "{{ $labels.name }} "
+      description: "容器 [{{ $labels.device }}] 网卡5分钟平均发送流量超过20Mbps."
+      value: "{{ $value }}Mbps"
+
+
+-------------
+
+
+
+
+
+
