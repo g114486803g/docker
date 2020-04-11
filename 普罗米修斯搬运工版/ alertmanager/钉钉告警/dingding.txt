@@ -1,0 +1,38 @@
+docker pull timonwong/prometheus-webhook-dingtalk:latest
+
+
+
+注意：http://localhost:8060/dingtalk/webhook1/send ，其中webhook1，一定是当时使用docker运行prometheus-webhook-dingtalk容器指定钉钉接口参数的变量：webhook1，如下：webhook1
+--ding.profile="webhook1=https://oapi.dingtalk.com/robot/send?access_token=XXXXXX"
+
+docker run -d --restart always -p 8060:8060 timonwong/prometheus-webhook-dingtalk:latest --ding.profile="webhook1=https://oapi.dingtalk.com/robot/send?access_token=XXXXXX"
+
+
+-----------------
+
+cat alertmanager.yml 
+
+global:
+  resolve_timeout: 2m
+route:
+  receiver: webhook
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 15m
+  group_by: [alertname]
+receivers:
+- name: webhook
+  webhook_configs:
+  - url: http://10.98.2.200:8060/dingtalk/webhook1/send   <<<----钉钉服务器端的IP
+    send_resolved: true
+    
+
+https://hub.docker.com/r/prom/alertmanager
+
+docker run -d --name alertmanager -p 9093:9093 -v /data/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml prom/alertmanager:latest
+
+
+
+
+
+
