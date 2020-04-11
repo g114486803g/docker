@@ -1,0 +1,50 @@
+ wget http://134.175.78.125:9001/dow/node_exporter -P /usr/local/bin/ && sudo chmod +x /usr/local/bin/node_exporter
+
+ wget http://10.22.32.2:9001/dow/node_exporter -P /usr/local/bin/ && sudo chmod +x /usr/local/bin/node_exporter
+
+# 移动二进制文件
+#mv node_exporter-0.17.0.linux-amd64/node_exporter /usr/local/bin/
+
+
+#vim /etc/systemd/system/node_exporter.service
+
+cat <<EOF > /etc/systemd/system/node_exporter.service
+
+[Unit]
+Description=Node Exporter
+After=network.target
+
+[Service]
+User=daemon
+Group=daemon
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+
+
+cat <<EOF > startw.sh
+systemctl daemon-reload
+systemctl start node_exporter
+systemctl enable node_exporter
+ss -tnul | grep 9100
+firewall-cmd --state
+
+EOF
+
+chmod +x startw.sh && bash startw.sh
+
+
+
+firewall-cmd --zone=public --add-port=9100/tcp --permanent
+firewall-cmd --reload
+
+firewall-cmd --list-all
+
+
+方法一 开启热更新 --web.enable-lifecycle
+方法二 文件服务发现  file_sd_configs
+方法三 Consul 服务发现  consul_sd_configs
