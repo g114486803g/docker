@@ -30,3 +30,8 @@ docker run -d \
   安装链接
   https://www.kancloud.cn/roeslys/linux/1593364
 
+
+[root@master new-etcd]# kubectl exec -it test-etc-s-7b557bbb6c-fq9c4 -- etcdctl --endpoints=http://10.22.32.10:2379 put foo 12313
+OK
+[root@master new-etcd]# kubectl exec -it test-etc-s-7b557bbb6c-fq9c4 -- etcdctl --endpoints=etcd-http://master:2379 get foo 12313
+
