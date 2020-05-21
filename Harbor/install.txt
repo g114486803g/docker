@@ -116,6 +116,11 @@ docker-compose  down -v
  rm -r /data/registry
  
  
+ 添加镜像扫描功能
+ ./prepare --with-clair
+
+docker-compose -f docker-compose.yml up -d
+ 
  ###########
 参考链接
 https://www.cnblogs.com/operationhome/p/10868498.html
