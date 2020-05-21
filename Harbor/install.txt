@@ -84,8 +84,11 @@ Error response from daemon: Get https://192.168.1.141/v2/: dial tcp 192.168.15.1
 
 2.编辑配置文件  /usr/lib/systemd/system/docker.service
 注释上面这条,添加下面那条
-#ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
-ExecStart=/usr/bin/dockerd --insecure-registry=192.168.1.141
+--insecure-registry=10.98.2.203
+
+ExecStart=/usr/bin/dockerd -H fd:// --insecure-registry=10.98.2.203 --containerd=/run/containerd/containerd.sock
+
+
 
 重启docker生效
 systemctl daemon-reload
